@@ -1,56 +1,101 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/src/scheduler/ticker.dart';
+import 'package:taskuse/src/DB/models/ChatUser.dart';
+import 'package:taskuse/src/DB/models/chamados.dart';
+import 'package:provider/provider.dart';
+import 'package:taskuse/src/DB/provider/ManagerCache.dart';
+import 'package:taskuse/src/pages/ViewTicket/ViewTicket.dart';
+import 'package:taskuse/src/pages/createTicket/CreateTicket.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+  const MyHomePage({super.key});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
+    List<Ticket> listaTicket = context.watch<ManagerCache>().GetTicketCache();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
+        title: Text("HOME"),
       ),
-      body: Center(
+      body: SafeArea(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            const Text(
-              'Bem-vindo User',
+            Container(
+              width: MediaQuery.of(context).size.width * 1,
+              child: Column(
+                children: [
+                  const Text(
+                    'Bem-vindo',
+                  ),
+                  Text(
+                    'Todal de Chamados: ' + listaTicket.length.toString(),
+                  ),
+                  ElevatedButton.icon(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => CreateTicketPage()),
+                        );
+                      },
+                      icon: Icon(Icons.call_to_action_rounded),
+                      label: Text("Abrir Chamado")),
+                ],
+              ),
             ),
-            ElevatedButton(
-                onPressed: () {}, child: const Text("Realizar chamado"))
+            Divider(),
+            Expanded(
+              child: listaTicket.isEmpty
+                  ? Center(
+                      child: Opacity(
+                        opacity: 0.7,
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.3,
+                          child: SvgPicture.asset(
+                            "assets/imgs/svg/undraw_no_data_re_kwbl.svg",
+                            semanticsLabel: 'Acme Logo',
+                          ),
+                        ),
+                      ),
+                    )
+                  : ListView.builder(
+                      itemCount: listaTicket.length,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 5),
+                          color: listaTicket[index].status == "pendent"
+                              ? Colors.green[100]
+                              : Colors.yellow[100],
+                          child: ListTile(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ViewTicket(
+                                          ticket: listaTicket[index],
+                                        )),
+                              );
+                            },
+                            title: Text(listaTicket[index].title),
+                            subtitle: Text(listaTicket[index].status),
+                          ),
+                        );
+                      },
+                    ),
+            )
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }

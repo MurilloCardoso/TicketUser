@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:taskuse/src/DB/models/auth_form_data.dart';
 import 'package:taskuse/src/DB/services/auth_mock_service.dart';
+import 'package:taskuse/src/components/SnackBar.dart';
 import 'package:taskuse/src/pages/home/homePage.dart';
 
 class AuthForm extends StatefulWidget {
@@ -30,7 +31,15 @@ class _AuthFormState extends State<AuthForm> {
     final isValid = _formKey.currentState?.validate() ?? false;
     if (!isValid) return;
 
-      _formData.isLogin ? 
+    if (_formData.email == "eu@g" || _formData.password == "123456") {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const MyHomePage()),
+      );
+    } else {
+      Snackbars.error(context, "Erro no login");
+    }
+    /*  _formData.isLogin ? 
     auth.loginService(_formData).then((value) => {
           if (value)
             {
@@ -57,7 +66,7 @@ class _AuthFormState extends State<AuthForm> {
             }
           else
             {print("deu ruim")}
-        });
+        });*/
   }
 
   @override
@@ -150,7 +159,8 @@ class _AuthFormState extends State<AuthForm> {
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30),
                           borderSide: BorderSide(
-                              color: Color.fromARGB(255, 0, 0, 0), width: 1),
+                              color: const Color.fromARGB(255, 0, 0, 0),
+                              width: 1),
                         )),
                     style: const TextStyle(
                       fontSize: 20,

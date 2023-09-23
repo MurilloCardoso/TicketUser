@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:taskuse/src/DB/provider/ManagerCache.dart';
+
+import 'package:provider/provider.dart';
 import 'package:taskuse/src/pages/home/homePage.dart';
-import 'package:taskuse/src/pages/session/auth_formPage.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp( MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ManagerCache()),
+      ],
+      child: MyApp(),
+    ),);
 }
 
 class MyApp extends StatelessWidget {
@@ -19,7 +26,9 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: AuthForm (),
+      home: MyHomePage(),
+      debugShowCheckedModeBanner: false,
+      
     );
   }
 }
