@@ -6,18 +6,17 @@ import 'package:taskuse/src/pages/ViewTicket/ViewTicket.dart';
 import 'package:taskuse/src/pages/createTicket/CreateTicket.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:taskuse/src/utils/ColorPallete.dart';
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+class ResolutionPage extends StatefulWidget {
+  const ResolutionPage({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<ResolutionPage> createState() => _ResolutionPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _ResolutionPageState extends State<ResolutionPage> {
   @override
   Widget build(BuildContext context) {
-    List<Ticket> listaTicket = context.watch<ManagerCache>().GetTicketCache();
+   List<Ticket> listaTicket = context.watch<ManagerCache>().GetTicketCache();
     return Scaffold(
       
       appBar: AppBar(
@@ -59,22 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         const SizedBox(
                           height: 10,
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            ElevatedButton.icon(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            CreateTicketPage()),
-                                  );
-                                },
-                                icon: Icon(Icons.call_to_action_rounded),
-                                label: Text("Abrir Chamado")),
-                          ],
-                        ),
+                     
                       ],
                     ),
                   ),

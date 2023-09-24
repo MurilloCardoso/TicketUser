@@ -3,9 +3,15 @@ import 'package:taskuse/src/DB/provider/ManagerCache.dart';
 
 import 'package:provider/provider.dart';
 import 'package:taskuse/src/pages/home/homePage.dart';
+import 'package:taskuse/src/pages/session/auth_formPage.dart';
+import 'package:taskuse/src/pages/session/teste.dart';
 import 'package:taskuse/src/utils/ColorPallete.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+
+void main() async {
+   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(
     MultiProvider(
       providers: [
@@ -29,7 +35,7 @@ class MyApp extends StatelessWidget {
             ColorScheme.fromSeed(seedColor: ColorsPalette.orangeMedium),
         useMaterial3: true,
       ),
-      home: MyHomePage(),
+      home: teste(),
       debugShowCheckedModeBanner: false,
     );
   }

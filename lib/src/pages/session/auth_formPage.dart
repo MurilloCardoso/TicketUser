@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:taskuse/src/DB/models/auth_form_data.dart';
 import 'package:taskuse/src/DB/services/auth_mock_service.dart';
@@ -14,6 +15,25 @@ class AuthForm extends StatefulWidget {
 }
 
 class _AuthFormState extends State<AuthForm> {
+    FirebaseAuth _auth = FirebaseAuth.instance;
+  String _token = "";
+    @override
+  void initState() {
+    super.initState();
+    _getToken();
+  }
+
+  // Função para obter o token de autenticação
+  Future<void> _getToken() async {
+    User? user = _auth.currentUser;
+    if (user != null) {
+      String? token = await user.getIdToken();
+      setState(() {
+        _token = token!;
+      });
+    }
+  }
+
   final _formKey = GlobalKey<FormState>();
   final _formData = AuthFormData();
   final auth = AuthMockService();
@@ -27,50 +47,46 @@ class _AuthFormState extends State<AuthForm> {
     );
   }
 
-  void _submit() {
-    final isValid = _formKey.currentState?.validate() ?? false;
-    if (!isValid) return;
 
-    if (_formData.email == "eu@g" || _formData.password == "123456") {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const MyHomePage()),
-      );
-    } else {
-      Snackbars.error(context, "Erro no login");
-    }
-    /*  _formData.isLogin ? 
-    auth.loginService(_formData).then((value) => {
-          if (value)
-            {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => MyHomePage(
-                          title: "awdwaed",
-                        )),
-              )
-            }
-          else
-            {print("deu ruim")}
-        }): auth.cadastroService(_formData).then((value) => {
-          if (value)
-            {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => MyHomePage(
-                          title: "awdwaed",
-                        )),
-              )
-            }
-          else
-            {print("deu ruim")}
-        });*/
-  }
 
   @override
   Widget build(BuildContext context) {
+
+      Future<void> _submit() async {
+    final isValid = _formKey.currentState?.validate() ?? false;
+    if (!isValid) return;
+  User? user = _auth.currentUser;
+  var _tokena = await FirebaseAuth.instance.currentUser?.getIdToken();
+  
+      _formData.isLogin ? 
+    auth.loginService(_formData,context,_tokena!).then((value) => {
+          if (value)
+            {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => MyHomePage(
+                        
+                        )),
+              )
+            }
+          else
+            {print("deu ruim")}
+        }): auth.cadastroService(_formData,context,_tokena!).then((value) => {
+          if (value)
+            {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => MyHomePage(
+                      
+                        )),
+              )
+            }
+          else
+            {print("deu ruim")}
+        });
+  }
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(

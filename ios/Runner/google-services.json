@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "405409511078",
+    "firebase_url": "https://web2-teste-default-rtdb.firebaseio.com",
+    "project_id": "web2-teste",
+    "storage_bucket": "web2-teste.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:405409511078:android:4939108e277ef764c56667",
+        "android_client_info": {
+          "package_name": "com.taskuse.users"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "405409511078-8lffa53ku381j1bnh2r61ri3dfmuo6a2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC9MrepGsft4y2TwufAC8z3lIvGKjE0aUw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "405409511078-8lffa53ku381j1bnh2r61ri3dfmuo6a2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
