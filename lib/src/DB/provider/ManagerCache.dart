@@ -15,9 +15,15 @@ class ManagerCache with ChangeNotifier, DiagnosticableTreeMixin {
     notifyListeners();
   }
 
-  void addTicketCache(Ticket ticket) {
-    listaCart.add(ticket);
-    notifyListeners();
+  Future<bool> addTicketCache(Ticket ticket) async {
+    try {
+      listaCart.add(ticket);
+      notifyListeners();
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
   }
 
   List<Ticket> GetTicketCache() {

@@ -3,14 +3,17 @@ import 'package:taskuse/src/DB/provider/ManagerCache.dart';
 
 import 'package:provider/provider.dart';
 import 'package:taskuse/src/pages/home/homePage.dart';
+import 'package:taskuse/src/utils/ColorPallete.dart';
 
 void main() {
-  runApp( MultiProvider(
+  runApp(
+    MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ManagerCache()),
       ],
       child: MyApp(),
-    ),);
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -22,14 +25,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-    
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme:
+            ColorScheme.fromSeed(seedColor: ColorsPalette.orangeMedium),
         useMaterial3: true,
       ),
       home: MyHomePage(),
       debugShowCheckedModeBanner: false,
-      
     );
   }
 }
-

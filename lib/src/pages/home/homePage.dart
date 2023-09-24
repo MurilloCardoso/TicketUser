@@ -7,6 +7,7 @@ import 'package:taskuse/src/DB/provider/ManagerCache.dart';
 import 'package:taskuse/src/pages/ViewTicket/ViewTicket.dart';
 import 'package:taskuse/src/pages/createTicket/CreateTicket.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:taskuse/src/utils/ColorPallete.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -30,29 +31,52 @@ class _MyHomePageState extends State<MyHomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(
+              padding: EdgeInsets.symmetric(vertical: 10),
               width: MediaQuery.of(context).size.width * 1,
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Bem-vindo',
+                  Container(
+                    margin: EdgeInsets.all(10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Bem-vindo',
+                          style: TextStyle(fontSize: 20),
+                        ),
+                        Text(
+                          'Todal de Chamados: ' + listaTicket.length.toString(),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            ElevatedButton.icon(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            CreateTicketPage()),
+                                  );
+                                },
+                                icon: Icon(Icons.call_to_action_rounded),
+                                label: Text("Abrir Chamado")),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                  Text(
-                    'Todal de Chamados: ' + listaTicket.length.toString(),
-                  ),
-                  ElevatedButton.icon(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => CreateTicketPage()),
-                        );
-                      },
-                      icon: Icon(Icons.call_to_action_rounded),
-                      label: Text("Abrir Chamado")),
                 ],
               ),
             ),
-            Divider(),
+            const Divider(
+              height: 0,
+            ),
             Expanded(
               child: listaTicket.isEmpty
                   ? Center(
@@ -70,25 +94,69 @@ class _MyHomePageState extends State<MyHomePage> {
                   : ListView.builder(
                       itemCount: listaTicket.length,
                       itemBuilder: (context, index) {
-                        return Container(
-                          margin: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 5),
-                          color: listaTicket[index].status == "pendent"
-                              ? Colors.green[100]
-                              : Colors.yellow[100],
-                          child: ListTile(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ViewTicket(
-                                          ticket: listaTicket[index],
-                                        )),
-                              );
-                            },
-                            title: Text(listaTicket[index].title),
-                            subtitle: Text(listaTicket[index].status),
-                          ),
+                        Color color = Colors.grey;
+                        if (listaTicket[index].status == "pendent") {
+                          color = ColorsPalette.yellow;
+                        } else {
+                          if (listaTicket[index].status == "processing") {
+                            color = ColorsPalette.blue;
+                          } else if (listaTicket[index].status == "concluded") {
+                            color = ColorsPalette.green;
+                          } else {
+                            color = const Color.fromARGB(255, 235, 126, 126);
+                          }
+                        }
+
+                        return Column(
+                          children: [
+                            Container(
+                              child: ListTile(
+                                leading: CircleAvatar(
+                                  backgroundColor: color,
+                                  child: Icon(
+                                    color: Colors.white,
+                                    Icons.timer,
+                                  ),
+                                ),
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => ViewTicket(
+                                              ticket: listaTicket[index],
+                                            )),
+                                  );
+                                },
+                                title: Text(
+                                  listaTicket[index].title,
+                                  style: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                                subtitle: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      listaTicket[index].status.toUpperCase(),
+                                      style: TextStyle(
+                                          color: Colors.grey,
+                                          fontWeight: FontWeight.w800),
+                                    ),
+                                    Text(
+                                      listaTicket[index].problemDescription,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w400),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Divider(
+                              height: 0,
+                            ),
+                          ],
                         );
                       },
                     ),
