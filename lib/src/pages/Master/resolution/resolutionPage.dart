@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:taskuse/src/DB/models/ChatUser.dart';
 import 'package:taskuse/src/DB/models/chamados.dart';
 import 'package:provider/provider.dart';
 import 'package:taskuse/src/DB/provider/ManagerCache.dart';
 import 'package:taskuse/src/pages/ViewTicket/ViewTicket.dart';
-import 'package:taskuse/src/pages/createTicket/CreateTicket.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:taskuse/src/pages/session/auth_formPage.dart';
 import 'package:taskuse/src/utils/ColorPallete.dart';
+
 class ResolutionPage extends StatefulWidget {
   const ResolutionPage({super.key});
 
@@ -16,17 +18,32 @@ class ResolutionPage extends StatefulWidget {
 class _ResolutionPageState extends State<ResolutionPage> {
   @override
   Widget build(BuildContext context) {
-   List<Ticket> listaTicket = context.watch<ManagerCache>().GetTicketCache();
+    List<Ticket> listaTicket = context.watch<ManagerCache>().GetTicketCache();
+    ChatUser user = context.watch<ManagerCache>().GetUserCache();
+
     return Scaffold(
-      
       appBar: AppBar(
-      leading: Icon(Icons.notifications,  color: Colors.white,),
+        leading: const Icon(
+          Icons.notifications,
+          color: Colors.white,
+        ),
         backgroundColor: ColorsPalette.orangeMedium,
         actions: [
           IconButton(
               onPressed: () {},
-              icon: Icon(
+              icon: const Icon(
                 Icons.person,
+                color: Colors.white,
+              )),
+          IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AuthForm()),
+                );
+              },
+              icon: const Icon(
+                Icons.exit_to_app,
                 color: Colors.white,
               )),
         ],
@@ -48,8 +65,8 @@ class _ResolutionPageState extends State<ResolutionPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          'Bem-vindo',
+                        Text(
+                          'Bem-vindo ${user.name}',
                           style: TextStyle(fontSize: 20),
                         ),
                         Text(
@@ -58,7 +75,6 @@ class _ResolutionPageState extends State<ResolutionPage> {
                         const SizedBox(
                           height: 10,
                         ),
-                     
                       ],
                     ),
                   ),
