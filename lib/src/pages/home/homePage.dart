@@ -5,7 +5,8 @@ import 'package:taskuse/src/DB/models/chamados.dart';
 import 'package:provider/provider.dart';
 import 'package:taskuse/src/DB/provider/ManagerCache.dart';
 import 'package:taskuse/src/DB/services/database.dart';
-import 'package:taskuse/src/pages/ViewTicket/ViewTicket.dart';
+import 'package:taskuse/src/pages/ViewTicket/List/ViewListTicket.dart';
+import 'package:taskuse/src/pages/ViewTicket/onlyView/ViewTicket.dart';
 import 'package:taskuse/src/pages/createTicket/CreateTicket.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:taskuse/src/pages/session/auth_formPage.dart';
@@ -211,42 +212,51 @@ class _MyHomePageState extends State<MyHomePage> {
                                 )),
                           ),
                         ),
-                        Container(
-                          margin: EdgeInsets.only(right: 20),
-                          width: MediaQuery.of(context).size.width * 0.25,
-                          height: MediaQuery.of(context).size.height * 0.13,
-                          decoration: BoxDecoration(
-                            color: ColorsPalette.orangeMedium,
-                            boxShadow: const [
-                              BoxShadow(
-                                  blurRadius: 1,
-                                  offset: Offset(2, 1),
-                                  color: Colors.grey)
-                            ],
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: ClipRRect(
+                        GestureDetector(
+                          onTap: () {
+                              Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ViewListTicket()),
+                            );
+                          },
+                          child: Container(
+                            margin: EdgeInsets.only(right: 20),
+                            width: MediaQuery.of(context).size.width * 0.25,
+                            height: MediaQuery.of(context).size.height * 0.13,
+                            decoration: BoxDecoration(
+                              color: ColorsPalette.orangeMedium,
+                              boxShadow: const [
+                                BoxShadow(
+                                    blurRadius: 1,
+                                    offset: Offset(2, 1),
+                                    color: Colors.grey)
+                              ],
                               borderRadius: BorderRadius.circular(20),
-                              child: const Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.list_alt_outlined,
-                                    size: 27,
-                                    color: Colors.white,
-                                  ),
-                                  Text(
-                                    "List logs",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w600,
-                                        overflow: TextOverflow.clip),
-                                  ),
-                                ],
-                              )),
+                            ),
+                            child: ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: const Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.list_alt_outlined,
+                                      size: 27,
+                                      color: Colors.white,
+                                    ),
+                                    Text(
+                                      "List logs",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w600,
+                                          overflow: TextOverflow.clip),
+                                    ),
+                                  ],
+                                )),
+                          ),
                         ),
                         Container(
                           margin: const EdgeInsets.only(right: 20),
@@ -301,8 +311,12 @@ class _MyHomePageState extends State<MyHomePage> {
                   const SizedBox(
                     height: 5,
                   ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.45,
+               
+                ],
+              ),
+            ),
+               Expanded(
+                   
                     child: listaTicket.isEmpty
                         ? Center(
                             child: Opacity(
@@ -322,32 +336,31 @@ class _MyHomePageState extends State<MyHomePage> {
                               Color color = Colors.grey;
                               IconData? icone = Icons.abc;
                               if (listaTicket[index].status == "Pendent") {
-                                color = ColorsPalette.yellow;
+                                color = Color.fromARGB(255, 237, 200, 98);
                                 icone = Icons.timer;
                               } else {
                                 if (listaTicket[index].status == "Processing") {
                                   icone = Icons.work_history_rounded;
-                                  color = ColorsPalette.blue;
+                                  color = const Color.fromARGB(255, 82, 86, 163);
                                 } else if (listaTicket[index].status ==
                                     "Concluded") {
-                                  color = ColorsPalette.green;
+                                  color = Color.fromARGB(255, 96, 188, 136);
                                   icone = Icons.done_outlined;
                                 } else {
                                   icone = Icons.do_not_disturb_on;
                                   color =
-                                      const Color.fromARGB(255, 235, 126, 126);
+                                      Color.fromARGB(255, 224, 98, 98);
                                 }
                               }
                               return Column(
-                                children: [
+                                children: [Divider(height: 0,color: const Color.fromARGB(31, 109, 109, 109),),
                                   Container(
-                                    margin: EdgeInsets.symmetric(
-                                        horizontal: 10, vertical: 5),
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius:
-                                            BorderRadius.circular(15)),
+                                    color: Colors.white,
                                     child: ListTile(
+                                      trailing: const Icon(
+                                          Icons.arrow_right_sharp,
+                                          color: ColorsPalette.orangeMedium,
+                                        ),
                                       leading: Container(
                                         padding: EdgeInsets.all(8),
                                         decoration: BoxDecoration(
@@ -357,6 +370,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                         child: Icon(
                                           icone,
                                           color: Colors.white,
+                                          shadows: [Shadow(blurRadius: 1.0,color: Colors.grey,offset: Offset(1, 2))],
                                         ),
                                       ),
                                       onTap: () {
@@ -371,9 +385,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                       title: Text(
                                         listaTicket[index].title,
                                         style: const TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w400),
+                                            color: Color.fromARGB(255, 64, 63, 63),
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600),
                                       ),
                                       subtitle: Column(
                                         mainAxisAlignment:
@@ -396,9 +410,6 @@ class _MyHomePageState extends State<MyHomePage> {
                             },
                           ),
                   ),
-                ],
-              ),
-            ),
           ],
         ),
       ),

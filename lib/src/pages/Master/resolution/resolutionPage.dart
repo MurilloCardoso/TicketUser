@@ -3,7 +3,7 @@ import 'package:taskuse/src/DB/models/ChatUser.dart';
 import 'package:taskuse/src/DB/models/chamados.dart';
 import 'package:provider/provider.dart';
 import 'package:taskuse/src/DB/provider/ManagerCache.dart';
-import 'package:taskuse/src/pages/ViewTicket/ViewTicket.dart';
+import 'package:taskuse/src/pages/ViewTicket/onlyView/ViewTicket.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:taskuse/src/pages/session/auth_formPage.dart';
 import 'package:taskuse/src/utils/ColorPallete.dart';

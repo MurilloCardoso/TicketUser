@@ -71,7 +71,7 @@ class _ViewTicketState extends State<ViewTicket> {
             ),
             isThreeLine: true,
           ),
-          Expanded(
+          Container(
             child: Container(
               width: MediaQuery.of(context).size.width * 1,
               color: ColorsPalette.smoke,
@@ -99,6 +99,26 @@ class _ViewTicketState extends State<ViewTicket> {
                         ),
                         isThreeLine: true,
                       ),
+                    ),
+                    ListView.builder(
+                      itemCount: widget.ticket.message.length,
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          leading: CircleAvatar(
+                              child: Icon(
+                            Icons.analytics_outlined,
+                            color: Colors.white,
+                          )),
+                          title: Text('Esperando análise'),
+                          subtitle:
+                              Text("Aguarde a resposta de um responsável "),
+                          trailing: Icon(
+                            Icons.info,
+                            color: Colors.grey,
+                          ),
+                          isThreeLine: true,
+                        );
+                      },
                     ),
                     TextField()
                   ],
