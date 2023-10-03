@@ -29,7 +29,7 @@ List<Ticket> db_services = [
      message:[
       Message(speaker:ChatUser(id: 55, name:"João Paulo", email: "adm@h.c", password: "123", type: 2), 
      message:"Good morning, the department that requested this told me that they hadn't put it in the battery for a while, correct?."),
-     Message(speaker:ChatUser(id: 451, name:"Maria Luiza", email: "marialuiza@h.c", password: "maria123", type: 1),
+     Message(speaker:ChatUser(id: 23, name:"Junior", email: "marialuiza@h.c", password: "maria123", type: 1),
     message:"Hi, I have no idea, the director just gave it to me and I tried calling here and it didn't work"),
       Message(speaker:ChatUser(id: 55, name:"João Paulo", email: "adm123@h.c", password: "123", type: 2),
     message:"ok, I'll see what I can do"),

@@ -32,6 +32,7 @@ class database with ChangeNotifier {
           problemDescription: productData['descricao'],
           problemItem: productData['item'],
           status: productData['status'],
+          message: productData['message'],
           id: productData['ID'],
         ),
       );
@@ -58,6 +59,7 @@ class database with ChangeNotifier {
             problemDescription: element.problemDescription,
             problemItem: element.problemItem,
             status: element.status,
+            message: element.message,
           ),
         );
       }

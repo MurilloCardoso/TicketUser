@@ -16,7 +16,7 @@ class CreateTicketPage extends StatefulWidget {
 class _CreateTicketPageState extends State<CreateTicketPage> {
   final _formKey = GlobalKey<FormState>();
   Ticket prod =
-      Ticket(title: "", problemDescription: "", problemItem: "", status: "");
+      Ticket(title: "", problemDescription: "", problemItem: "", status: "",message: []);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -190,7 +190,10 @@ class _CreateTicketPageState extends State<CreateTicketPage> {
                                   title: prod.title,
                                   problemDescription: prod.problemDescription,
                                   problemItem: prod.problemItem,
-                                  status: "pendent");
+                                  status: "pendent",
+                                  message: []
+                                  
+                                  );
                               context
                                   .read<ManagerCache>()
                                   .addTicketCache(ticket)
