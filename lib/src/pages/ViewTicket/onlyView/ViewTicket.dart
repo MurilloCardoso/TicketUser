@@ -17,7 +17,8 @@ class _ViewTicketState extends State<ViewTicket> {
   Widget build(BuildContext context) {
     ChatUser user = context.watch<ManagerCache>().GetUserCache();
     void enviarMensagem() {}
-    return Scaffold(
+    return Scaffold(    
+        backgroundColor:  ColorsPalette.smoke,
       appBar: AppBar(
           iconTheme: IconThemeData(color: Colors.white),
           backgroundColor: ColorsPalette.orangeMedium,
@@ -28,55 +29,57 @@ class _ViewTicketState extends State<ViewTicket> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(
-              height: 10,
-            ),
-            ListTile(
-              leading: Column(
-                children: [
-                  CircleAvatar(
-                      child: Icon(
-                    Icons.timer,
-                    color: Colors.white,
-                  )),
-                  Text(
-                    widget.ticket.status.toUpperCase(),
-                    style: const TextStyle(
-                      color: Colors.grey,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ],
-              ),
-              title: Text(
-                widget.ticket.title,
-                style:
-                    const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-              ),
-              subtitle: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Divider(),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        "Item:",
-                        style: TextStyle(fontWeight: FontWeight.w500),
+           
+            Container(color: Colors.white,
+              child: ListTile(
+            
+                
+                leading: Column(
+                  children: [
+                    const CircleAvatar(
+                        child: Icon(
+                      Icons.timer,
+                      color: Colors.white,
+                    )),
+                    Text(
+                      widget.ticket.status.toUpperCase(),
+                      style: const TextStyle(
+                        color: Colors.grey,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      Text(widget.ticket.problemItem),
-                    ],
-                  ),
-                  const Divider(),
-                  const Text(
-                    "Descrição:",
-                    style: TextStyle(fontWeight: FontWeight.w500),
-                  ),
-                  Text(widget.ticket.problemDescription),
-                ],
+                    ),
+                  ],
+                ),
+                title: Text(
+                  widget.ticket.title,
+                  style:
+                      const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                ),
+                subtitle: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Divider(),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Item:",
+                          style: TextStyle(fontWeight: FontWeight.w500),
+                        ),
+                        Text(widget.ticket.problemItem),
+                      ],
+                    ),
+                    const Divider(),
+                    const Text(
+                      "Descrição:",
+                      style: TextStyle(fontWeight: FontWeight.w500),
+                    ),
+                    Text(widget.ticket.problemDescription),
+                  ],
+                ),
+                isThreeLine: true,
               ),
-              isThreeLine: true,
             ),
             Container(
               child: Container(
@@ -108,76 +111,55 @@ class _ViewTicketState extends State<ViewTicket> {
                           isThreeLine: true,
                         ),
                       ),
-                      Container(
-                        height: MediaQuery.of(context).size.height * 1,
-                        child: ListView.builder(
-                          reverse: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: widget.ticket.message.length,
-                          itemBuilder: (context, index) {
-                            var message = widget.ticket.message[index];
-                            var isUsuarioLogado = message.speaker.id == user.id;
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: widget.ticket.message.length,
+                        itemBuilder: (context, index) {
+                          var message = widget.ticket.message[index];
+                          var isUsuarioLogado = message.speaker.id == user.id;
 
-                            // Define a margem e a cor de fundo com base no remetente da mensagem
-                            var margin = isUsuarioLogado
-                                ? EdgeInsets.only(top: 10, left: 70)
-                                : EdgeInsets.only(top: 10, right: 70);
-                            var backgroundColor = isUsuarioLogado
-                                ? const Color.fromARGB(255, 140, 203, 255)
-                                : Colors.white;
+                          // Define a margem e a cor de fundo com base no remetente da mensagem
+                          var margin = isUsuarioLogado
+                              ? EdgeInsets.only(top: 10, left: 70)
+                              : EdgeInsets.only(top: 10, right: 70);
+                          var backgroundColor = isUsuarioLogado
+                              ? const Color.fromARGB(255, 140, 203, 255)
+                              : Colors.white;
 
-                            return Container(
-                              margin: margin,
-                              decoration: BoxDecoration(
-                                  boxShadow: const [
-                                    BoxShadow(
-                                        blurRadius: 2,
-                                        blurStyle: BlurStyle.outer,
-                                        offset: Offset(1, 1),
-                                        color: Colors.grey)
-                                  ],
-                                  color: backgroundColor,
-                                  borderRadius: BorderRadius.circular(25)),
-                              child: ListTile(
-                                leading: const CircleAvatar(
-                                    child: Icon(
-                                  Icons.person,
-                                  color: Colors.white,
-                                )),
-                                title: Text(
-                                    widget.ticket.message[index].speaker.name),
-                                subtitle: Text(message.message.toString(),
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600)),
-                                isThreeLine: true,
-                              ),
-                            );
-                          },
-                        ),
+                          return Container(
+                            margin: margin,
+                            decoration: BoxDecoration(
+                                boxShadow: const [
+                                  BoxShadow(
+                                      blurRadius: 2,
+                                      blurStyle: BlurStyle.outer,
+                                      offset: Offset(1, 1),
+                                      color: Colors.grey)
+                                ],
+                                color: backgroundColor,
+                                borderRadius: BorderRadius.circular(25)),
+                            child: ListTile(
+                              leading: const CircleAvatar(
+                                  child: Icon(
+                                Icons.person,
+                                color: Colors.white,
+                              )),
+                              title: Text(
+                                  widget.ticket.message[index].speaker.name),
+                              subtitle: Text(message.message.toString(),
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600)),
+                              isThreeLine: true,
+                            ),
+                          );
+                        },
                       ),
                       const SizedBox(
                         height: 15,
                       ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: TextFormField(
-                              key: const ValueKey('name'),
-                              onChanged: (name) => () {},
-                              decoration: InputDecoration(
-                                  filled: true,
-                                 suffix: TextButton(onPressed: (){}, child:Text("Send",style: TextStyle(color: ColorsPalette.orangeMedium,fontSize: 18),)),
-                                  hintText: 'Message',
-                                  fillColor: Color.fromARGB(255, 229, 229, 229),
-                                  contentPadding: const EdgeInsets.fromLTRB(
-                                      20.0, 10.0, 20.0, 10.0),
-                                  ),
-                            ),
-                          ),
-                       
-                        ],
-                      )
+                  
                     ],
                   ),
                 ),
@@ -185,7 +167,29 @@ class _ViewTicketState extends State<ViewTicket> {
             ),
           ],
         ),
-      )),
+      )), persistentFooterButtons: [
+        Container(
+          color: Colors.grey[200], // Cor de fundo da barra de navegação
+          padding: EdgeInsets.only(bottom: 2, top: 2,left: 2),
+          child: Row(
+            children: [
+              Expanded(
+                child: TextFormField(
+                
+                  decoration: InputDecoration(
+                    hintText: 'Digite sua mensagem...',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+              ),
+              IconButton(color: ColorsPalette.orangeMedium,
+                icon: Icon(Icons.send),
+                onPressed: (){},
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
