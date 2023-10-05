@@ -1,12 +1,16 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:taskuse/src/DB/dum/db_services.dart';
 import 'package:taskuse/src/DB/models/ChatUser.dart';
 import 'package:taskuse/src/DB/models/auth_form_data.dart';
 import 'package:taskuse/src/DB/models/chamados.dart';
 import 'package:taskuse/src/DB/provider/ManagerCache.dart';
 import 'package:taskuse/src/DB/services/auth_mock_service.dart';
-import 'package:taskuse/src/pages/Master/resolution/resolutionPage.dart';
+import 'package:taskuse/src/components/SnackBar.dart';
 import 'package:taskuse/src/pages/home/homePage.dart';
 import 'package:provider/provider.dart';
+import 'package:taskuse/src/utils/ColorPallete.dart';
 
 class AuthForm extends StatefulWidget {
   const AuthForm({
@@ -57,31 +61,52 @@ class _AuthFormState extends State<AuthForm> {
       if (!isValid) return;
       //    User? user = _auth.currentUser;
       // var _tokena = await FirebaseAuth.instance.currentUser?.getIdToken();
-
+      bool login = false;
+      ChatUser chat = const ChatUser(
+          id: 0, name: "name", email: "email", password: "password", type: 0);
       if (_formData.isLogin) {
-        if (_formData.email == "m@h.c" && _formData.password == "123456") {
-          ChatUser user = ChatUser(
-              id: 1, name: "Luciano", email: "m@h.c", password: "-", type: 0);
-
-          //context.read<ManagerCache>().addUserCache(user);
-
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => MyHomePage()),
-          );
-        } else if (_formData.email == "adm@h.c" &&
-            _formData.password == "adm123") {
-          ChatUser user = ChatUser(
-              id: 1, name: "Murillo", email: "adm@h.c", password: "-", type: 0);
-
-          context.read<ManagerCache>().addUserCache(user);
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => ResolutionPage()),
-          );
-        } else {
-          print("deu ruim");
+        for (ChatUser user in db_user) {
+          if (_formData.email == user.email &&
+              _formData.password == user.password.toString()) {
+            login = true;
+            chat = user;
+          }
         }
+
+        if (login) {
+          if (chat.id != 0) {
+            context.read<ManagerCache>().addUserCache(chat);
+
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => MyHomePage()),
+            );
+          } else {
+            Snackbar.error(context, "Error");
+            _showError("Erro Login");
+          }
+        } else {
+          Snackbar.error(context, "Incorrect credentials");
+        }
+      } else {
+        db_user.add(ChatUser(
+            id: db_user.length,
+            name: _formData.name,
+            email: _formData.email,
+            password: _formData.password,
+            type: 1));
+        chat = ChatUser(
+            id: db_user.length,
+            name: _formData.name,
+            email: _formData.email,
+            password: _formData.password,
+            type: 1);
+        context.read<ManagerCache>().addUserCache(chat);
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const MyHomePage()),
+        );
       }
     }
     // Future<void> _submit() async {
@@ -116,34 +141,58 @@ class _AuthFormState extends State<AuthForm> {
     // }
 
     return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 0,
+        backgroundColor: ColorsPalette.orangeMedium,
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Form(
             key: _formKey,
             child: Column(
               children: [
-                Text(
-                  _formData.isLogin ? 'Login' : 'Cadastro',
+                Container(
+                    width: MediaQuery.of(context).size.width * 0.2,
+                    height: MediaQuery.of(context).size.height * 0.2,
+                    margin: EdgeInsets.symmetric(vertical: 10),
+                    child: Image.asset("assets/imgs/tasks-icon-19.jpg")),
+                Row(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 30, vertical: 0),
+                      child: Text(
+                        _formData.isLogin ? 'Login' : 'Cadastro',
+                        style: const TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: "Poppins"),
+                      ),
+                    ),
+                  ],
                 ),
                 if (_formData.isSignup)
                   Container(
-                    margin: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 30, vertical: 10),
                     child: TextFormField(
                       key: const ValueKey('name'),
                       onChanged: (name) => _formData.name = name,
-                      decoration: InputDecoration(
-                          icon: new Icon(Icons.person,
-                              color: Color.fromARGB(255, 0, 0, 0)),
-                          hintText: 'Email',
-                          fillColor: Color.fromARGB(255, 255, 255, 255),
-                          filled: true,
-                          contentPadding:
-                              EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
+                      decoration: const InputDecoration(
+                        hintText: 'Name',
+                        fillColor: Color.fromARGB(255, 255, 255, 255),
+                        filled: true,
+                        border: OutlineInputBorder(
                             borderSide: BorderSide(
-                                color: Color.fromARGB(255, 0, 0, 0), width: 1),
-                          )),
+                                color: Color.fromARGB(255, 0, 0, 0), width: 1)),
+                        contentPadding:
+                            EdgeInsets.fromLTRB(20.0, 5, 20.0, 10.0),
+                      ),
+                      style: const TextStyle(
+                        fontSize: 15,
+                        color: Color.fromARGB(255, 0, 0, 0),
+                      ),
+                      textInputAction: TextInputAction.next,
                       validator: (localName) {
                         final name = localName ?? '';
                         if (name.trim().length < 5) {
@@ -154,26 +203,23 @@ class _AuthFormState extends State<AuthForm> {
                     ),
                   ),
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
                   child: TextFormField(
                     key: const ValueKey('email'),
                     onChanged: (email) => _formData.email = email,
-                    decoration: InputDecoration(
-                        icon: new Icon(Icons.email,
-                            color: Color.fromARGB(255, 0, 0, 0)),
-                        hintText: 'Email',
-                        fillColor: Color.fromARGB(255, 255, 255, 255),
-                        filled: true,
-                        contentPadding:
-                            EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30),
+                    decoration: const InputDecoration(
+                      hintText: 'Email',
+                      fillColor: Color.fromARGB(255, 255, 255, 255),
+                      filled: true,
+                      border: OutlineInputBorder(
                           borderSide: BorderSide(
-                              color: Color.fromARGB(255, 0, 0, 0), width: 1),
-                        )),
+                              color: Color.fromARGB(255, 0, 0, 0), width: 1)),
+                      contentPadding: EdgeInsets.fromLTRB(20.0, 5, 20.0, 10.0),
+                    ),
                     style: const TextStyle(
-                      fontSize: 20,
-                      color: Colors.blue,
+                      fontSize: 15,
+                      color: Color.fromARGB(255, 0, 0, 0),
                     ),
                     textInputAction: TextInputAction.next,
                     validator: (localEmail) {
@@ -192,22 +238,17 @@ class _AuthFormState extends State<AuthForm> {
                     onChanged: (password) => _formData.password = password,
                     obscureText: true,
                     autofocus: false,
-                    decoration: InputDecoration(
-                        icon: new Icon(Icons.lock,
-                            color: Color.fromARGB(255, 0, 0, 0)),
-                        hintText: 'Password',
-                        fillColor: Color.fromARGB(255, 255, 255, 255),
-                        filled: true,
-                        contentPadding:
-                            EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30),
+                    decoration: const InputDecoration(
+                      hintText: 'Password',
+                      fillColor: Color.fromARGB(255, 255, 255, 255),
+                      filled: true,
+                      border: OutlineInputBorder(
                           borderSide: BorderSide(
-                              color: const Color.fromARGB(255, 0, 0, 0),
-                              width: 1),
-                        )),
+                              color: Color.fromARGB(255, 0, 0, 0), width: 1)),
+                      contentPadding: EdgeInsets.fromLTRB(20.0, 5, 20.0, 10.0),
+                    ),
                     style: const TextStyle(
-                      fontSize: 20,
+                      fontSize: 15,
                       color: Color.fromARGB(255, 0, 0, 0),
                     ),
                     validator: (localPassword) {
@@ -222,7 +263,12 @@ class _AuthFormState extends State<AuthForm> {
                 const SizedBox(height: 12),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                      primary: Color.fromARGB(255, 239, 181, 35),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                            0), // Ajuste o valor do raio conforme necessário
+                      ),
+                      foregroundColor: Colors.white,
+                      primary: ColorsPalette.orangeMedium,
                       padding:
                           EdgeInsets.symmetric(horizontal: 100, vertical: 10),
                       textStyle: const TextStyle(
@@ -232,10 +278,9 @@ class _AuthFormState extends State<AuthForm> {
                   onPressed: _submit,
                   child: Text(_formData.isLogin ? 'Entrar' : 'Cadastrar'),
                 ),
-                const SizedBox(height: 20),
                 Column(
                   children: [
-                    Container(
+                    SizedBox(
                       child: TextButton(
                         onPressed: () {
                           setState(() {

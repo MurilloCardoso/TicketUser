@@ -69,7 +69,7 @@ class _CreateTicketPageState extends State<CreateTicketPage> {
                     Container(
                       margin: const EdgeInsets.only(left: 10),
                       child: const Text(
-                        "Título",
+                        "Title",
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.w500),
                       ),
@@ -87,14 +87,14 @@ class _CreateTicketPageState extends State<CreateTicketPage> {
                           validator: (titleForm) {
                             final form = titleForm ?? '';
                             if (form.isEmpty) {
-                              return 'Informe um título válida.';
+                              return 'Enter a valid title.';
                             }
                             return null;
                           },
                           decoration: const InputDecoration(
                             contentPadding:
                                 EdgeInsets.fromLTRB(10.0, 5.0, 5.0, 5.0),
-                            hintText: "Insira um titulo",
+                            hintText: "Enter a title",
                             border: InputBorder.none, // Remove a borda padrão
                           ),
                           onChanged: (value) => prod.title = value),
@@ -124,13 +124,13 @@ class _CreateTicketPageState extends State<CreateTicketPage> {
                             contentPadding:
                                 EdgeInsets.fromLTRB(10.0, 5.0, 5.0, 5.0),
                             border: InputBorder.none,
-                            hintText: "Insira um nome do item"
+                            hintText: "Enter an item name"
                             // Remove a borda padrão
                             ),
                         validator: (localEmail) {
                           final email = localEmail ?? '';
                           if (email.isEmpty) {
-                            return 'Informe o item para o chamado.';
+                            return 'Enter the item for the ticket.';
                           }
                           return null;
                         },
@@ -143,7 +143,7 @@ class _CreateTicketPageState extends State<CreateTicketPage> {
                     Container(
                       margin: const EdgeInsets.only(left: 10),
                       child: const Text(
-                        "Descrição",
+                        "Description",
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.w500),
                       ),
@@ -162,13 +162,13 @@ class _CreateTicketPageState extends State<CreateTicketPage> {
                         decoration: const InputDecoration(
                           contentPadding:
                               EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
-                          hintText: "Descreva um relato para o chamados",
+                          hintText: "Describe a story for the so-called",
                           border: InputBorder.none, // Remove a borda padrão
                         ),
                         validator: (descricaoForm) {
                           final form = descricaoForm ?? '';
                           if (form.isEmpty) {
-                            return 'Informe uma descrição válida.';
+                            return 'Enter a valid description.';
                           }
                           return null;
                         },
@@ -179,9 +179,9 @@ class _CreateTicketPageState extends State<CreateTicketPage> {
                     const SizedBox(
                       height: 20,
                     ),
-                    const Text("(Opcional)"),
+                    const Text("(Optional)"),
                     const Text(
-                      "Bata uma foto para melhor vizualização",
+                      "Take a photo for better viewing",
                       style: TextStyle(fontSize: 12),
                     ),
                     GestureDetector(
@@ -201,7 +201,7 @@ class _CreateTicketPageState extends State<CreateTicketPage> {
                             children: [
                               Icon(Icons.photo, size: 27),
                               Text(
-                                "Insira uma foto",
+                                "Insert a photo",
                                 style: TextStyle(fontSize: 17),
                               )
                             ],
@@ -244,7 +244,7 @@ class _CreateTicketPageState extends State<CreateTicketPage> {
                                                             MainAxisSize.min,
                                                         children: [
                                                           const Text(
-                                                            "Chamado Criado com Sucesso",
+                                                            "Ticket Created Successfully",
                                                             style: TextStyle(
                                                               fontSize: 21,
                                                             ),
@@ -271,7 +271,7 @@ class _CreateTicketPageState extends State<CreateTicketPage> {
                                                                           context);
                                                                     },
                                                                     child: const Text(
-                                                                        "Realizar novo chamado")),
+                                                                        "Make new ticket")),
                                                           ),
                                                           SvgPicture.asset(
                                                             "undraw_no_data_re_kwbl.svg",
@@ -307,7 +307,7 @@ class _CreateTicketPageState extends State<CreateTicketPage> {
                                                                       );
                                                                     },
                                                                     child: const Text(
-                                                                        "Finalizar criação")),
+                                                                        "Finish creation")),
                                                           )
                                                         ]),
                                                   ),
@@ -317,12 +317,12 @@ class _CreateTicketPageState extends State<CreateTicketPage> {
                                           }
                                         else
                                           {
-                                            Snackbars.error(
-                                                context, "Erro na operação")
+                                            Snackbar.error(
+                                                context, "Operation error")
                                           }
                                       });
                             },
-                            child: const Text("Cadastrar chamado")),
+                            child: const Text("Register call")),
                       ),
                     )
                   ]),

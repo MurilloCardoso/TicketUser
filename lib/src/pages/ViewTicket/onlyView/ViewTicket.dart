@@ -3,6 +3,7 @@ import 'package:taskuse/src/DB/models/ChatUser.dart';
 import 'package:taskuse/src/DB/models/chamados.dart';
 import 'package:taskuse/src/DB/models/message.dart';
 import 'package:taskuse/src/DB/provider/ManagerCache.dart';
+import 'package:taskuse/src/components/SnackBar.dart';
 import 'package:taskuse/src/utils/ColorPallete.dart';
 import 'package:provider/provider.dart';
 
@@ -14,6 +15,14 @@ class ViewTicket extends StatefulWidget {
 }
 
 class _ViewTicketState extends State<ViewTicket> {
+  String dropdownValue = "All";
+  List<String> items = [
+    "All",
+    "Pendent",
+    "Processing",
+    "Concluded",
+    "Inconclusive"
+  ];
   @override
   Widget build(BuildContext context) {
     final _formKey = GlobalKey<FormState>();
@@ -22,25 +31,25 @@ class _ViewTicketState extends State<ViewTicket> {
     Color color = Colors.grey;
     IconData? icone = Icons.abc;
     if (widget.ticket.status == "Pendent") {
-      color = Color.fromARGB(255, 237, 200, 98);
+      color = const Color.fromARGB(255, 237, 200, 98);
       icone = Icons.timer;
     } else {
       if (widget.ticket.status == "Processing") {
         icone = Icons.work_history_rounded;
         color = const Color.fromARGB(255, 82, 86, 163);
       } else if (widget.ticket.status == "Concluded") {
-        color = Color.fromARGB(255, 96, 188, 136);
+        color = const Color.fromARGB(255, 96, 188, 136);
         icone = Icons.done_outlined;
       } else {
         icone = Icons.do_not_disturb_on;
-        color = Color.fromARGB(255, 224, 98, 98);
+        color = const Color.fromARGB(255, 224, 98, 98);
       }
     }
 
     return Scaffold(
       backgroundColor: ColorsPalette.smoke,
       appBar: AppBar(
-          iconTheme: IconThemeData(color: Colors.white),
+          iconTheme: const IconThemeData(color: Colors.white),
           backgroundColor: color,
           actions: []),
       body: SafeArea(
@@ -53,7 +62,7 @@ class _ViewTicketState extends State<ViewTicket> {
               color: Colors.white,
               child: ListTile(
                 leading: Container(
-                  padding: EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
                       color: color, borderRadius: BorderRadius.circular(10)),
                   child: Icon(
@@ -89,7 +98,7 @@ class _ViewTicketState extends State<ViewTicket> {
                     ),
                     const Divider(),
                     const Text(
-                      "Descrição:",
+                      "Description:",
                       style: TextStyle(fontWeight: FontWeight.w500),
                     ),
                     Text(widget.ticket.problemDescription),
@@ -121,7 +130,7 @@ class _ViewTicketState extends State<ViewTicket> {
                               )),
                           title: Text(widget.ticket.status),
                           subtitle: const Text(
-                              "Aguarde a resposta de um responsável "),
+                              "Wait for a response from a person responsible "),
                           trailing: const Icon(
                             Icons.info,
                             color: Colors.grey,
@@ -131,7 +140,7 @@ class _ViewTicketState extends State<ViewTicket> {
                       ),
                       ListView.builder(
                         shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
+                        physics: const NeverScrollableScrollPhysics(),
                         itemCount: widget.ticket.message.length,
                         itemBuilder: (context, index) {
                           var message = widget.ticket.message[index];
@@ -186,41 +195,131 @@ class _ViewTicketState extends State<ViewTicket> {
         ),
       )),
       persistentFooterButtons: [
-        Form(
-          key: _formKey,
-          child: Container(
-            color: Colors.grey[200], // Cor de fundo da barra de navegação
-            padding: EdgeInsets.only(bottom: 2, top: 2, left: 2),
-            child: Row(
+        Column(
+          children: [
+            Row(
               children: [
-                Expanded(
-                  child: TextFormField(
-                    key: const ValueKey('message'),
-                    onChanged: (name) => textMessage = name,
-                    decoration: const InputDecoration(
-                      hintText: 'Digite sua mensagem...',
-                      border: OutlineInputBorder(),
-                    ),
+                TextButton(
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            content: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 15),
+                              child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Text(
+                                      "Ticket Created Successfully",
+                                      style: TextStyle(
+                                        fontSize: 21,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 15,
+                                    ),
+                                    SizedBox(
+                                      height:
+                                          MediaQuery.of(context).size.width *
+                                              0.1,
+                                      width:
+                                          MediaQuery.of(context).size.width * 1,
+                                      child: ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: const Text("Make new ticket")),
+                                    ),
+                                    const SizedBox(
+                                      height: 15,
+                                    ),
+                                    SizedBox(
+                                      width:
+                                          MediaQuery.of(context).size.width * 1,
+                                      height:
+                                          MediaQuery.of(context).size.width *
+                                              0.1,
+                                      child: ElevatedButton(
+                                          onPressed: () {},
+                                          child: const Text("Finish creation")),
+                                    )
+                                  ]),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                    child: Text("Close Ticket")),
+                DropdownButton<String>(
+                  underline: const SizedBox(
+                    height: 0,
+                    width: 0,
                   ),
-                ),
-                IconButton(
-                  color: ColorsPalette.orangeMedium,
-                  icon: Icon(Icons.send),
-                  onPressed: () {
-                    if (textMessage.isNotEmpty) {
-                      setState(() {
-                        widget.ticket.message.add(Message(
-                            id: widget.ticket.message.length,
-                            speaker: user,
-                            message: textMessage.toString()));
-                      });
-                      textMessage = "";
-                    }
+                  icon: const Icon(Icons.filter_list),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                    color: Color.fromARGB(255, 0, 0, 0),
+                  ),
+                  value: dropdownValue,
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      dropdownValue = newValue!;
+                    });
                   },
+                  items: items
+                      .map<DropdownMenuItem<String>>(
+                          (String value) => DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              ))
+                      .toList(),
                 ),
               ],
             ),
-          ),
+            const SizedBox(
+              height: 10,
+            ),
+            Form(
+              key: _formKey,
+              child: Container(
+                color: Colors.grey[200], // Cor de fundo da barra de navegação
+                padding: const EdgeInsets.only(bottom: 2, top: 2, left: 2),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        key: const ValueKey('message'),
+                        onChanged: (name) => textMessage = name,
+                        decoration: const InputDecoration(
+                          hintText: 'Type your message...',
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      color: ColorsPalette.orangeMedium,
+                      icon: const Icon(Icons.send),
+                      onPressed: () {
+                        if (widget.ticket.status.contains("Pendent")) {
+                          Snackbar.alert(context,
+                              "Wait for someone in charge to answer the ticket");
+                        } else if (textMessage.isNotEmpty) {
+                          setState(() {
+                            widget.ticket.message.add(Message(
+                                id: widget.ticket.message.length,
+                                speaker: user,
+                                message: textMessage.toString()));
+                          });
+                          textMessage = "";
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ],
     );

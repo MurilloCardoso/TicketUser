@@ -5,6 +5,7 @@ import 'package:taskuse/src/DB/models/chamados.dart';
 import 'package:provider/provider.dart';
 import 'package:taskuse/src/DB/provider/ManagerCache.dart';
 import 'package:taskuse/src/DB/services/database.dart';
+import 'package:taskuse/src/pages/Responsible/ResponsibleView.dart';
 import 'package:taskuse/src/pages/ViewTicket/List/ViewListTicket.dart';
 import 'package:taskuse/src/pages/ViewTicket/onlyView/ViewTicket.dart';
 import 'package:taskuse/src/pages/createTicket/CreateTicket.dart';
@@ -21,16 +22,27 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  String dropdownValue = "All";
+  List<String> items = [
+    "All",
+    "Pendent",
+    "Processing",
+    "Concluded",
+    "Inconclusive"
+  ];
+
   @override
   Widget build(BuildContext context) {
-    if (db_services.length >=
-        context.watch<ManagerCache>().GetTicketCache().length) {
+    if (context.watch<ManagerCache>().GetTicketCache().length == 0) {
       for (int i = 0; i < db_services.length; i++) {
         context.watch<ManagerCache>().addTicketCache(db_services[i]);
       }
     }
     ChatUser user = context.watch<ManagerCache>().GetUserCache();
-    List<Ticket> listaTicket = context.watch<ManagerCache>().GetTicketCache();
+
+    List<Ticket> listOrganize =
+        organize(context.watch<ManagerCache>().GetTicketCache());
+
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 236, 234, 230),
       appBar: AppBar(
@@ -92,7 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 ),
                               ),
                               Text(
-                                'Todal de Chamados: ${listaTicket.length}',
+                                'All Tickets: ${listOrganize.length}',
                               ),
                               const SizedBox(
                                 height: 10,
@@ -150,7 +162,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             Container(
-              padding: EdgeInsets.only(top: 20),
+              padding: const EdgeInsets.only(top: 20),
               decoration: const BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
@@ -175,7 +187,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             );
                           },
                           child: Container(
-                            margin: EdgeInsets.only(right: 20),
+                            margin: const EdgeInsets.only(right: 20),
                             width: MediaQuery.of(context).size.width * 0.25,
                             height: MediaQuery.of(context).size.height * 0.13,
                             decoration: BoxDecoration(
@@ -258,163 +270,261 @@ class _MyHomePageState extends State<MyHomePage> {
                                 )),
                           ),
                         ),
-                        Container(
-                          margin: const EdgeInsets.only(right: 20),
-                          width: MediaQuery.of(context).size.width * 0.25,
-                          height: MediaQuery.of(context).size.height * 0.13,
-                          decoration: BoxDecoration(
-                            color: ColorsPalette.orangeMedium,
-                            boxShadow: const [
-                              BoxShadow(
-                                  blurRadius: 1,
-                                  offset: Offset(2, 1),
-                                  color: Colors.grey)
-                            ],
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: ClipRRect(
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const ViewResponsible()),
+                            );
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.only(right: 20),
+                            width: MediaQuery.of(context).size.width * 0.25,
+                            height: MediaQuery.of(context).size.height * 0.13,
+                            decoration: BoxDecoration(
+                              color: ColorsPalette.orangeMedium,
+                              boxShadow: const [
+                                BoxShadow(
+                                    blurRadius: 1,
+                                    offset: Offset(2, 1),
+                                    color: Colors.grey)
+                              ],
                               borderRadius: BorderRadius.circular(20),
-                              child: const Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.receipt_long,
-                                    size: 27,
-                                    color: Colors.white,
-                                  ),
-                                  Text(
-                                    "Create log",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w500,
-                                        overflow: TextOverflow.clip),
-                                  ),
-                                ],
-                              )),
+                            ),
+                            child: ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: const Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.receipt_long,
+                                      size: 27,
+                                      color: Colors.white,
+                                    ),
+                                    Text(
+                                      "Create log",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w500,
+                                          overflow: TextOverflow.clip),
+                                    ),
+                                  ],
+                                )),
+                          ),
                         ),
                       ],
                     ),
                   ),
                   const SizedBox(
-                    height: 10,
+                    height: 15,
                   ),
-                  const Center(
-                    child: Text(
-                      "Call logs",
-                      style:
-                          TextStyle(fontSize: 25, fontWeight: FontWeight.w600),
-                    ),
+                  const Divider(
+                    height: 0,
+                    color: Color.fromARGB(31, 109, 109, 109),
                   ),
+                  listOrganize.isNotEmpty
+                      ? Container(
+                          padding: const EdgeInsets.all(5),
+                          margin: const EdgeInsets.symmetric(horizontal: 30),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const Text(
+                                "Tickets",
+                                style: TextStyle(
+                                    color: Color.fromARGB(255, 106, 106, 106),
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w600,
+                                    fontFamily: "Poppins"),
+                              ),
+                              Container(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 15),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(15),
+                                    color: Colors.grey[100]),
+                                child: DropdownButton<String>(
+                                  underline: const SizedBox(
+                                    height: 0,
+                                    width: 0,
+                                  ),
+                                  icon: const Icon(Icons.filter_list),
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    color: Color.fromARGB(255, 0, 0, 0),
+                                  ),
+                                  value: dropdownValue,
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      dropdownValue = newValue!;
+                                    });
+                                  },
+                                  items: items
+                                      .map<DropdownMenuItem<String>>(
+                                          (String value) =>
+                                              DropdownMenuItem<String>(
+                                                value: value,
+                                                child: Text(value),
+                                              ))
+                                      .toList(),
+                                ),
+                              )
+                            ],
+                          ),
+                        )
+                      : Container(),
                   const SizedBox(
                     height: 5,
                   ),
                 ],
               ),
             ),
-            Expanded(
-              child: listaTicket.isEmpty
-                  ? Center(
-                      child: Opacity(
-                        opacity: 0.7,
-                        child: SizedBox(
-                          width: double.maxFinite,
-                          child: SvgPicture.asset(
-                            "assets/imgs/svg/undraw_no_data_re_kwbl.svg",
-                            semanticsLabel: 'Acme Logo',
-                          ),
-                        ),
-                      ),
-                    )
-                  : ListView.builder(
-                      itemCount: listaTicket.length,
-                      itemBuilder: (context, index) {
-                        Color color = Colors.grey;
-                        IconData? icone = Icons.abc;
-                        if (listaTicket[index].status == "Pendent") {
-                          color = Color.fromARGB(255, 237, 200, 98);
-                          icone = Icons.timer;
-                        } else {
-                          if (listaTicket[index].status == "Processing") {
-                            icone = Icons.work_history_rounded;
-                            color = const Color.fromARGB(255, 82, 86, 163);
-                          } else if (listaTicket[index].status == "Concluded") {
-                            color = Color.fromARGB(255, 96, 188, 136);
-                            icone = Icons.done_outlined;
-                          } else {
-                            icone = Icons.do_not_disturb_on;
-                            color = Color.fromARGB(255, 224, 98, 98);
-                          }
-                        }
-                        return Column(
-                          children: [
-                            const Divider(
-                              height: 0,
-                              color: const Color.fromARGB(31, 109, 109, 109),
+            listOrganize.isEmpty
+                ? Expanded(
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Opacity(
+                            opacity: 1,
+                            child: SvgPicture.asset(
+                              "imgs/svg/undraw_no_data_re_kwbl.svg",
+                              semanticsLabel: 'Acme Logo',
+                              width: MediaQuery.of(context).size.width * 0.2,
+                              height: MediaQuery.of(context).size.height *
+                                  0.2, // Ajuste o tamanho conforme necessário
                             ),
-                            Container(
-                              color: Colors.white,
-                              child: ListTile(
-                                trailing: const Icon(
-                                  Icons.arrow_right_sharp,
-                                  color: ColorsPalette.orangeMedium,
+                          ),
+                          const SizedBox(height: 20),
+                          const Text(
+                            "No data found",
+                            style: TextStyle(
+                                color: Color.fromARGB(255, 106, 106, 106),
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: "Poppins"),
+                          )
+                        ],
+                      ),
+                    ),
+                  )
+                : Expanded(
+                    child: ListView.builder(
+                    itemCount: listOrganize.length,
+                    itemBuilder: (context, index) {
+                      Color color = Colors.grey;
+                      IconData? icone = Icons.abc;
+                      if (listOrganize[index].status == "Pendent") {
+                        color = Color.fromARGB(255, 237, 200, 98);
+                        icone = Icons.timer;
+                      } else {
+                        if (listOrganize[index].status == "Processing") {
+                          icone = Icons.work_history_rounded;
+                          color = const Color.fromARGB(255, 82, 86, 163);
+                        } else if (listOrganize[index].status == "Concluded") {
+                          color = Color.fromARGB(255, 96, 188, 136);
+                          icone = Icons.done_outlined;
+                        } else {
+                          icone = Icons.do_not_disturb_on;
+                          color = Color.fromARGB(255, 224, 98, 98);
+                        }
+                      }
+                      return dropdownValue == "All" ||
+                              (dropdownValue == listOrganize[index].status)
+                          ? Column(
+                              children: [
+                                const Divider(
+                                  height: 0,
+                                  color: Color.fromARGB(31, 109, 109, 109),
                                 ),
-                                leading: Container(
-                                  padding: const EdgeInsets.all(8),
-                                  decoration: BoxDecoration(
-                                      color: color,
-                                      borderRadius: BorderRadius.circular(10)),
-                                  child: Icon(
-                                    icone,
-                                    color: Colors.white,
-                                    shadows: const [
-                                      Shadow(
-                                          blurRadius: 1.0,
-                                          color: Colors.grey,
-                                          offset: Offset(1, 2))
-                                    ],
-                                  ),
-                                ),
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => ViewTicket(
-                                              ticket: listaTicket[index],
-                                            )),
-                                  );
-                                },
-                                title: Text(
-                                  listaTicket[index].title,
-                                  style: const TextStyle(
-                                      color: Color.fromARGB(255, 64, 63, 63),
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600),
-                                ),
-                                subtitle: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      listaTicket[index].status,
+                                Container(
+                                  color: Colors.white,
+                                  child: ListTile(
+                                    trailing: const Icon(
+                                      Icons.arrow_right_sharp,
+                                      color: ColorsPalette.orangeMedium,
+                                    ),
+                                    leading: Container(
+                                      padding: const EdgeInsets.all(8),
+                                      decoration: BoxDecoration(
+                                          color: color,
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      child: Icon(
+                                        icone,
+                                        color: Colors.white,
+                                        shadows: const [
+                                          Shadow(
+                                              blurRadius: 1.0,
+                                              color: Colors.grey,
+                                              offset: Offset(1, 2))
+                                        ],
+                                      ),
+                                    ),
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => ViewTicket(
+                                                  ticket: listOrganize[index],
+                                                )),
+                                      );
+                                    },
+                                    title: Text(
+                                      listOrganize[index].title,
                                       style: const TextStyle(
-                                          color: Colors.grey,
+                                          color:
+                                              Color.fromARGB(255, 64, 63, 63),
+                                          fontSize: 16,
                                           fontWeight: FontWeight.w600),
                                     ),
-                                  ],
+                                    subtitle: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          listOrganize[index].status,
+                                          style: const TextStyle(
+                                              color: Colors.grey,
+                                              fontWeight: FontWeight.w600),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-            ),
+                              ],
+                            )
+                          : const SizedBox.shrink();
+                    },
+                  ))
           ],
         ),
       ),
     );
+  }
+
+  List<Ticket> organize(List<Ticket> status) {
+    status.sort((a, b) {
+      // Se a é "Pendent" e b não é, coloque a em cima
+      if (a.status == "Pendent" && b.status != "Pendent") {
+        return -1;
+      }
+      // Se b é "Pendent" e a não é, coloque b em cima
+      if (b.status == "Pendent" && a.status != "Pendent") {
+        return 1;
+      }
+      // Caso contrário, não mude a ordem
+      return 0;
+    });
+    return status;
   }
 }
