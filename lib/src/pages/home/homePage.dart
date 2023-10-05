@@ -85,11 +85,18 @@ class _MyHomePageState extends State<MyHomePage> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                'Welcome ${user.name}',
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                ),
+                              ClipRRect(
+                                child:
+                                  Container(width: MediaQuery.of(context).size.width *0.6,
+                                  
+                                    child: Text(
+                                      'Welcome ${user.name}',
+                                      style: const TextStyle(
+                                        fontSize: 20,overflow: TextOverflow.ellipsis
+                                      ),
+                                    ),
+                                  ),
+                                
                               ),
                               Text(
                                 'Todal de Chamados: ${listaTicket.length}',
@@ -123,8 +130,8 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                           Container(
                             margin: EdgeInsets.only(right: 20),
-                            width: 70,
-                            height: 70,
+                            width: MediaQuery.of(context).size.width *0.15,
+                            height: MediaQuery.of(context).size.height *0.10,
                             decoration: BoxDecoration(
                               boxShadow: const [
                                 BoxShadow(
@@ -242,7 +249,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Icon(
-                                      Icons.list_alt_outlined,
+                                      Icons.list_alt,
                                       size: 27,
                                       color: Colors.white,
                                     ),
@@ -280,12 +287,12 @@ class _MyHomePageState extends State<MyHomePage> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Icon(
-                                    Icons.receipt_long,
+                                    Icons.settings,
                                     size: 27,
                                     color: Colors.white,
                                   ),
                                   Text(
-                                    "Create log",
+                                    "Settings",
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 15,

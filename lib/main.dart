@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
             ColorScheme.fromSeed(seedColor: ColorsPalette.orangeMedium),
         useMaterial3: true,
       ),
-      home: MyHomePage(),
+      home:AuthForm(),
       debugShowCheckedModeBanner: false,
     );
   }
