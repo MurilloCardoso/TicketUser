@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:taskuse/src/DB/models/chamados.dart';
 import 'package:taskuse/src/DB/provider/ManagerCache.dart';
 import 'package:provider/provider.dart';
 import 'package:taskuse/src/components/SnackBar.dart';
 import 'package:taskuse/src/pages/home/homePage.dart';
 import 'package:taskuse/src/utils/ColorPallete.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class CreateTicketPage extends StatefulWidget {
   const CreateTicketPage({super.key});
@@ -15,8 +17,32 @@ class CreateTicketPage extends StatefulWidget {
 
 class _CreateTicketPageState extends State<CreateTicketPage> {
   final _formKey = GlobalKey<FormState>();
-  Ticket prod =
-      Ticket(title: "", problemDescription: "", problemItem: "", status: "",message: []);
+
+  List<String>? _selectedImagePath = [];
+
+  @override
+  void initState() {
+    super.initState();
+    // Configura o MethodChannel para receber a URI da imagem
+    const platform = MethodChannel('samples.flutter.dev/gallery');
+    platform.setMethodCallHandler(_handleImageSelected);
+  }
+  // Função para lidar com a URI da imagem selecionada
+
+  Future<void> _handleImageSelected(MethodCall call) async {
+    if (call.method == 'imageSelected') {
+      setState(() {
+        _selectedImagePath!.add(call.arguments);
+      });
+    }
+  }
+
+  Ticket prod = Ticket(
+      title: "",
+      problemDescription: "",
+      problemItem: "",
+      status: "",
+      message: []);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -158,21 +184,28 @@ class _CreateTicketPageState extends State<CreateTicketPage> {
                       "Bata uma foto para melhor vizualização",
                       style: TextStyle(fontSize: 12),
                     ),
-                    Container(
-                      width: MediaQuery.of(context).size.width * 1,
-                      height: MediaQuery.of(context).size.height * 0.070,
-                      margin: EdgeInsets.symmetric(vertical: 20),
+                    GestureDetector(
+                      onTap: () async {
+                        const platform =
+                            MethodChannel('samples.flutter.dev/gallery');
+                        await platform.invokeMethod('openGallery');
+                      },
                       child: Container(
-                        color: ColorsPalette.smoke,
-                        child: const Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.photo, size: 27),
-                            Text(
-                              "Insira uma foto",
-                              style: TextStyle(fontSize: 17),
-                            )
-                          ],
+                        width: MediaQuery.of(context).size.width * 1,
+                        height: MediaQuery.of(context).size.height * 0.070,
+                        margin: EdgeInsets.symmetric(vertical: 20),
+                        child: Container(
+                          color: ColorsPalette.smoke,
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.photo, size: 27),
+                              Text(
+                                "Insira uma foto",
+                                style: TextStyle(fontSize: 17),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -190,10 +223,8 @@ class _CreateTicketPageState extends State<CreateTicketPage> {
                                   title: prod.title,
                                   problemDescription: prod.problemDescription,
                                   problemItem: prod.problemItem,
-                                  status: "pendent",
-                                  message: []
-                                  
-                                  );
+                                  status: "Pendent",
+                                  message: []);
                               context
                                   .read<ManagerCache>()
                                   .addTicketCache(ticket)
@@ -204,7 +235,6 @@ class _CreateTicketPageState extends State<CreateTicketPage> {
                                               context: context,
                                               builder: (context) {
                                                 return AlertDialog(
-                                                  title: Text("Title"),
                                                   content: Padding(
                                                     padding: const EdgeInsets
                                                         .symmetric(
@@ -214,8 +244,20 @@ class _CreateTicketPageState extends State<CreateTicketPage> {
                                                             MainAxisSize.min,
                                                         children: [
                                                           const Text(
-                                                              "Chamado Criado com Sucesso"),
+                                                            "Chamado Criado com Sucesso",
+                                                            style: TextStyle(
+                                                              fontSize: 21,
+                                                            ),
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 15,
+                                                          ),
                                                           SizedBox(
+                                                            height: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width *
+                                                                0.1,
                                                             width: MediaQuery.of(
                                                                         context)
                                                                     .size
@@ -231,12 +273,25 @@ class _CreateTicketPageState extends State<CreateTicketPage> {
                                                                     child: const Text(
                                                                         "Realizar novo chamado")),
                                                           ),
+                                                          SvgPicture.asset(
+                                                            "undraw_no_data_re_kwbl.svg",
+                                                            semanticsLabel:
+                                                                'Acme Logo',
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 15,
+                                                          ),
                                                           SizedBox(
                                                             width: MediaQuery.of(
                                                                         context)
                                                                     .size
                                                                     .width *
                                                                 1,
+                                                            height: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width *
+                                                                0.1,
                                                             child:
                                                                 ElevatedButton(
                                                                     onPressed:
