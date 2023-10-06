@@ -3,11 +3,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:taskuse/src/DB/dum/db_services.dart';
 import 'package:taskuse/src/DB/models/ChatUser.dart';
 import 'package:taskuse/src/DB/models/chamados.dart';
 
 class ManagerCache with ChangeNotifier, DiagnosticableTreeMixin {
-  List<Ticket> listaCart = [];
   ChatUser userLogged = ChatUser(
       id: 23,
       name: "Junior",
@@ -20,9 +20,14 @@ class ManagerCache with ChangeNotifier, DiagnosticableTreeMixin {
     notifyListeners();
   }
 
+  void setListaTicket(List<Ticket> tickets) {
+    db_services = tickets;
+    notifyListeners();
+  }
+
   Future<bool> addTicketCache(Ticket ticket) async {
     try {
-      listaCart.add(ticket);
+      db_services.add(ticket);
       notifyListeners();
       return true;
     } catch (e) {
@@ -32,7 +37,7 @@ class ManagerCache with ChangeNotifier, DiagnosticableTreeMixin {
   }
 
   List<Ticket> GetTicketCache() {
-    return listaCart;
+    return db_services;
   }
 
   ChatUser GetUserCache() {
