@@ -33,16 +33,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    if (context.watch<ManagerCache>().GetTicketCache().length == 0) {
-      for (int i = 0; i < db_services.length; i++) {
-        context.watch<ManagerCache>().addTicketCache(db_services[i]);
-      }
-    }
     ChatUser user = context.watch<ManagerCache>().GetUserCache();
-
-    List<Ticket> listOrganize =
-        organize(context.watch<ManagerCache>().GetTicketCache());
-
+    List<Ticket> listOrganize = context.watch<ManagerCache>().GetTicketCache();
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 236, 234, 230),
       appBar: AppBar(
@@ -415,97 +407,102 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ),
                   )
-                : Expanded(
-                    child: ListView.builder(
-                    itemCount: listOrganize.length,
-                    itemBuilder: (context, index) {
-                      Color color = Colors.grey;
-                      IconData? icone = Icons.abc;
-                      if (listOrganize[index].status == "Pendent") {
-                        color = Color.fromARGB(255, 237, 200, 98);
-                        icone = Icons.timer;
-                      } else {
-                        if (listOrganize[index].status == "Processing") {
-                          icone = Icons.work_history_rounded;
-                          color = const Color.fromARGB(255, 82, 86, 163);
-                        } else if (listOrganize[index].status == "Concluded") {
-                          color = Color.fromARGB(255, 96, 188, 136);
-                          icone = Icons.done_outlined;
+                : Expanded(child: Consumer<ManagerCache>(
+                    builder: (context, managerCache, child) {
+                    List<Ticket> listOrganize = managerCache.GetTicketCache();
+                    return ListView.builder(
+                      itemCount: listOrganize.length,
+                      itemBuilder: (context, index) {
+                        Color color = Colors.grey;
+                        IconData? icone = Icons.abc;
+                        if (listOrganize[index].status == "Pendent") {
+                          color = Color.fromARGB(255, 237, 200, 98);
+                          icone = Icons.timer;
                         } else {
-                          icone = Icons.do_not_disturb_on;
-                          color = Color.fromARGB(255, 224, 98, 98);
+                          if (listOrganize[index].status == "Processing") {
+                            icone = Icons.work_history_rounded;
+                            color = const Color.fromARGB(255, 82, 86, 163);
+                          } else if (listOrganize[index].status ==
+                              "Concluded") {
+                            color = Color.fromARGB(255, 96, 188, 136);
+                            icone = Icons.done_outlined;
+                          } else {
+                            icone = Icons.do_not_disturb_on;
+                            color = Color.fromARGB(255, 224, 98, 98);
+                          }
                         }
-                      }
-                      return dropdownValue == "All" ||
-                              (dropdownValue == listOrganize[index].status)
-                          ? Column(
-                              children: [
-                                const Divider(
-                                  height: 0,
-                                  color: Color.fromARGB(31, 109, 109, 109),
-                                ),
-                                Container(
-                                  color: Colors.white,
-                                  child: ListTile(
-                                    trailing: const Icon(
-                                      Icons.arrow_right_sharp,
-                                      color: ColorsPalette.orangeMedium,
-                                    ),
-                                    leading: Container(
-                                      padding: const EdgeInsets.all(8),
-                                      decoration: BoxDecoration(
-                                          color: color,
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
-                                      child: Icon(
-                                        icone,
-                                        color: Colors.white,
-                                        shadows: const [
-                                          Shadow(
-                                              blurRadius: 1.0,
-                                              color: Colors.grey,
-                                              offset: Offset(1, 2))
+
+                        return dropdownValue == "All" ||
+                                (dropdownValue == listOrganize[index].status)
+                            ? Column(
+                                children: [
+                                  const Divider(
+                                    height: 0,
+                                    color: Color.fromARGB(31, 109, 109, 109),
+                                  ),
+                                  Container(
+                                    color: Colors.white,
+                                    child: ListTile(
+                                      trailing: const Icon(
+                                        Icons.arrow_right_sharp,
+                                        color: ColorsPalette.orangeMedium,
+                                      ),
+                                      leading: Container(
+                                        padding: const EdgeInsets.all(8),
+                                        decoration: BoxDecoration(
+                                            color: color,
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        child: Icon(
+                                          icone,
+                                          color: Colors.white,
+                                          shadows: const [
+                                            Shadow(
+                                                blurRadius: 1.0,
+                                                color: Colors.grey,
+                                                offset: Offset(1, 2))
+                                          ],
+                                        ),
+                                      ),
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => ViewTicket(
+                                                    ticket: listOrganize[index],
+                                                  )),
+                                        );
+                                      },
+                                      title: Text(
+                                        listOrganize[index].title,
+                                        style: const TextStyle(
+                                            color:
+                                                Color.fromARGB(255, 64, 63, 63),
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                      subtitle: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            listOrganize[index].status,
+                                            style: const TextStyle(
+                                                color: Colors.grey,
+                                                fontWeight: FontWeight.w600),
+                                          ),
                                         ],
                                       ),
                                     ),
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => ViewTicket(
-                                                  ticket: listOrganize[index],
-                                                )),
-                                      );
-                                    },
-                                    title: Text(
-                                      listOrganize[index].title,
-                                      style: const TextStyle(
-                                          color:
-                                              Color.fromARGB(255, 64, 63, 63),
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w600),
-                                    ),
-                                    subtitle: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          listOrganize[index].status,
-                                          style: const TextStyle(
-                                              color: Colors.grey,
-                                              fontWeight: FontWeight.w600),
-                                        ),
-                                      ],
-                                    ),
                                   ),
-                                ),
-                              ],
-                            )
-                          : const SizedBox.shrink();
-                    },
-                  ))
+                                ],
+                              )
+                            : const SizedBox.shrink();
+                      },
+                    );
+                  }))
           ],
         ),
       ),

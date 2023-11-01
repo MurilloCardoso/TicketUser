@@ -1,9 +1,13 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
+import 'package:taskuse/src/DB/dum/db_services.dart';
 import 'package:taskuse/src/DB/models/ChatUser.dart';
 import 'package:taskuse/src/DB/models/chamados.dart';
 import 'package:taskuse/src/DB/models/message.dart';
 import 'package:taskuse/src/DB/provider/ManagerCache.dart';
 import 'package:taskuse/src/components/SnackBar.dart';
+import 'package:taskuse/src/pages/home/homePage.dart';
 import 'package:taskuse/src/utils/ColorPallete.dart';
 import 'package:provider/provider.dart';
 
@@ -15,16 +19,11 @@ class ViewTicket extends StatefulWidget {
 }
 
 class _ViewTicketState extends State<ViewTicket> {
-  String dropdownValue = "All";
-  List<String> items = [
-    "All",
-    "Pendent",
-    "Processing",
-    "Concluded",
-    "Inconclusive"
-  ];
+  String dropdownValue = "";
+  List<String> items = ["Pendent", "Processing", "Concluded", "Inconclusive"];
   @override
   Widget build(BuildContext context) {
+    dropdownValue = widget.ticket.status;
     final _formKey = GlobalKey<FormState>();
     String textMessage = "";
     ChatUser user = context.watch<ManagerCache>().GetUserCache();
@@ -58,6 +57,14 @@ class _ViewTicketState extends State<ViewTicket> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => MyHomePage()),
+                  );
+                },
+                child: Text("ad")),
             Container(
               color: Colors.white,
               child: ListTile(
@@ -205,41 +212,38 @@ class _ViewTicketState extends State<ViewTicket> {
                         context: context,
                         builder: (context) {
                           return AlertDialog(
+                            title: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                IconButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  icon: const Icon(Icons.close),
+                                )
+                              ],
+                            ),
                             content: Padding(
                               padding: const EdgeInsets.symmetric(vertical: 15),
                               child: Column(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     const Text(
-                                      "Ticket Created Successfully",
+                                      "Are you sure you want to close the ticket?",
                                       style: TextStyle(
-                                        fontSize: 21,
-                                      ),
+                                          fontSize: 21,
+                                          fontFamily: "Poppins",
+                                          fontWeight: FontWeight.w700),
                                     ),
                                     const SizedBox(
                                       height: 15,
                                     ),
                                     SizedBox(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.5,
                                       height:
-                                          MediaQuery.of(context).size.width *
-                                              0.1,
-                                      width:
-                                          MediaQuery.of(context).size.width * 1,
-                                      child: ElevatedButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          child: const Text("Make new ticket")),
-                                    ),
-                                    const SizedBox(
-                                      height: 15,
-                                    ),
-                                    SizedBox(
-                                      width:
-                                          MediaQuery.of(context).size.width * 1,
-                                      height:
-                                          MediaQuery.of(context).size.width *
-                                              0.1,
+                                          MediaQuery.of(context).size.height *
+                                              0.08,
                                       child: ElevatedButton(
                                           onPressed: () {},
                                           child: const Text("Finish creation")),
@@ -250,7 +254,7 @@ class _ViewTicketState extends State<ViewTicket> {
                         },
                       );
                     },
-                    child: Text("Close Ticket")),
+                    child: const Text("Close Ticket")),
                 DropdownButton<String>(
                   underline: const SizedBox(
                     height: 0,
@@ -263,8 +267,18 @@ class _ViewTicketState extends State<ViewTicket> {
                   ),
                   value: dropdownValue,
                   onChanged: (String? newValue) {
+                    db_services.map((e) {
+                      if (e.id == widget.ticket.id) {
+                        widget.ticket.status = newValue!;
+                        context
+                            .read<ManagerCache>()
+                            .setListaTicket(db_services);
+                      }
+                    });
+
                     setState(() {
-                      dropdownValue = newValue!;
+                      widget.ticket.status = newValue!;
+                      dropdownValue = newValue;
                     });
                   },
                   items: items

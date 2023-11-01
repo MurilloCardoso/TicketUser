@@ -154,7 +154,7 @@ class _AuthFormState extends State<AuthForm> {
                 Container(
                     width: MediaQuery.of(context).size.width * 0.2,
                     height: MediaQuery.of(context).size.height * 0.2,
-                    margin: EdgeInsets.symmetric(vertical: 10),
+                    margin: const EdgeInsets.symmetric(vertical: 10),
                     child: Image.asset("assets/imgs/tasks-icon-19.jpg")),
                 Row(
                   children: [
