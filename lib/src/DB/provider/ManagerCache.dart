@@ -9,7 +9,7 @@ import 'package:taskuse/src/DB/models/chamados.dart';
 
 class ManagerCache with ChangeNotifier, DiagnosticableTreeMixin {
   ChatUser userLogged = ChatUser(
-      id: 23,
+      id: 2,
       name: "Junior",
       email: "junior@gmail.com",
       password: "passwor",
