@@ -7,7 +7,7 @@ import 'package:taskuse/src/DB/models/auth_form_data.dart';
 import 'package:taskuse/src/DB/models/chamados.dart';
 import 'package:taskuse/src/DB/provider/ManagerCache.dart';
 import 'package:taskuse/src/DB/services/auth_mock_service.dart';
-import 'package:taskuse/src/pages/Master/resolution/resolutionPage.dart';
+import 'package:taskuse/src/components/SnackBar.dart';
 import 'package:taskuse/src/pages/home/homePage.dart';
 import 'package:provider/provider.dart';
 import 'package:taskuse/src/utils/ColorPallete.dart';
@@ -66,7 +66,6 @@ class _AuthFormState extends State<AuthForm> {
           id: 0, name: "name", email: "email", password: "password", type: 0);
       if (_formData.isLogin) {
         for (ChatUser user in db_user) {
-         
           if (_formData.email == user.email &&
               _formData.password == user.password.toString()) {
             login = true;
@@ -76,26 +75,18 @@ class _AuthFormState extends State<AuthForm> {
 
         if (login) {
           if (chat.id != 0) {
-            if (chat.type == 2) {
-              context.read<ManagerCache>().addUserCache(chat);
+            context.read<ManagerCache>().addUserCache(chat);
 
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ResolutionPage()),
-              );
-            } else {
-              context.read<ManagerCache>().addUserCache(chat);
-
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => MyHomePage()),
-              );
-            }
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => MyHomePage()),
+            );
           } else {
+            Snackbar.error(context, "Error");
             _showError("Erro Login");
           }
         } else {
-          print("deu ruim");
+          Snackbar.error(context, "Incorrect credentials");
         }
       } else {
         db_user.add(ChatUser(
@@ -114,7 +105,7 @@ class _AuthFormState extends State<AuthForm> {
 
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => MyHomePage()),
+          MaterialPageRoute(builder: (context) => const MyHomePage()),
         );
       }
     }
@@ -163,7 +154,7 @@ class _AuthFormState extends State<AuthForm> {
                 Container(
                     width: MediaQuery.of(context).size.width * 0.2,
                     height: MediaQuery.of(context).size.height * 0.2,
-                    margin: EdgeInsets.symmetric(vertical: 10),
+                    margin: const EdgeInsets.symmetric(vertical: 10),
                     child: Image.asset("assets/imgs/tasks-icon-19.jpg")),
                 Row(
                   children: [

@@ -70,6 +70,7 @@ flutter:
     #   - images/a_dot_ham.jpeg
     - assets/
     - assets/imgs/
+    - assets/imgs/svg/
   fonts:
     - family: Poppins
       fonts:
