@@ -1,5 +1,3 @@
-// ignore_for_file: public_member_api_docs, lines_longer_than_80_chars
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -9,7 +7,12 @@ import 'package:taskuse/src/DB/models/chamados.dart';
 class ManagerCache with ChangeNotifier, DiagnosticableTreeMixin {
   List<Ticket> listaCart = [];
   ChatUser userLogged = ChatUser(
-      id:  0, name: "", email: "", password: "", type: 1);
+
+      id: 23,
+      name: "Junior",
+      email: "junior@gmail.com",
+      password: "passwor",
+      type: 0);
 
   void addUserCache(ChatUser prod) {
     userLogged = prod;

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:taskuse/src/DB/provider/ManagerCache.dart';
 import 'package:provider/provider.dart';
-import 'package:taskuse/src/pages/Master/resolution/resolutionPage.dart';
 import 'package:taskuse/src/pages/home/homePage.dart';
 import 'package:taskuse/src/pages/session/auth_formPage.dart';
 import 'package:taskuse/src/utils/ColorPallete.dart';

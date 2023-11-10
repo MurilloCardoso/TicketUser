@@ -7,7 +7,7 @@ import 'package:taskuse/src/DB/models/auth_form_data.dart';
 import 'package:taskuse/src/DB/models/chamados.dart';
 import 'package:taskuse/src/DB/provider/ManagerCache.dart';
 import 'package:taskuse/src/DB/services/auth_mock_service.dart';
-import 'package:taskuse/src/pages/Master/resolution/resolutionPage.dart';
+import 'package:taskuse/src/components/SnackBar.dart';
 import 'package:taskuse/src/pages/home/homePage.dart';
 import 'package:provider/provider.dart';
 import 'package:taskuse/src/utils/ColorPallete.dart';
@@ -85,6 +85,17 @@ class _AuthFormState extends State<AuthForm> {
               );
             } else {
               context.read<ManagerCache>().addUserCache(chat);
+        for (ChatUser user in db_user) {
+          if (_formData.email == user.email &&
+              _formData.password == user.password.toString()) {
+            login = true;
+            chat = user;
+          }
+        }
+
+        if (login) {
+          if (chat.id != 0) {
+            context.read<ManagerCache>().addUserCache(chat);
 
               Navigator.push(
                 context,
@@ -92,6 +103,14 @@ class _AuthFormState extends State<AuthForm> {
               );
             }
           } else {
+            _showError("Erro Login");
+          }
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => MyHomePage()),
+            );
+          } else {
+            Snackbar.error(context, "Error");
             _showError("Erro Login");
           }
         } else {
@@ -115,6 +134,27 @@ class _AuthFormState extends State<AuthForm> {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => MyHomePage()),
+        );
+          Snackbar.error(context, "Incorrect credentials");
+        }
+      } else {
+        db_user.add(ChatUser(
+            id: db_user.length,
+            name: _formData.name,
+            email: _formData.email,
+            password: _formData.password,
+            type: 1));
+        chat = ChatUser(
+            id: db_user.length,
+            name: _formData.name,
+            email: _formData.email,
+            password: _formData.password,
+            type: 1);
+        context.read<ManagerCache>().addUserCache(chat);
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const MyHomePage()),
         );
       }
     }
