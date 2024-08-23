@@ -1,16 +1,18 @@
-# taskuse
+#TaskUSE- App de Suporte
+###Bem-vindo ao Manutenção e Comunicação, um aplicativo desenvolvido para otimizar a interação entre o setor de ajuda e reparos e outros departamentos. Este aplicativo facilita a solicitação de ###reparos, a gestão de tickets e a comunicação entre os usuários e a equipe de suporte.
 
-A new Flutter project.
+##Funcionalidades
+###Solicitação de Reparos: Envie pedidos de manutenção com detalhes do problema.
+###Gerenciamento de Tickets: Acompanhe o status dos seus pedidos de reparo em tempo real.
+###Comunicação Direta: Troque mensagens e atualizações diretamente com a equipe de suporte.
+##Histórico de Solicitações: Acesse o histórico de todos os pedidos de manutenção feitos.
+##Notificações: Receba alertas e atualizações sobre o andamento dos seus tickets.
+##Tecnologias Utilizadas
+###Front-end: Flutter
+###Banco de Dados: Mock dentro do APP
+##Instalação
+##Pré-requisitos
+###Antes de começar, certifique-se de ter os seguintes softwares instalados:
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Flutter 
+Android Studio
